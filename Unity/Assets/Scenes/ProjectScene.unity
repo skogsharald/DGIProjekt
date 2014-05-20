@@ -1808,7 +1808,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 711688053}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 992.318176, y: 11.6651154, z: 1995.45398}
+  m_LocalPosition: {x: 994.622803, y: 0, z: 1995.45398}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1904172077}
@@ -2415,6 +2415,8 @@ MonoBehaviour:
   rightXBounds: 2.88020692e-05
   leftXBounds: 1007.341
   avoidSpeed: 12.46
+  currentCarPassing: {fileID: 0}
+  beingOverTaken: 0
 --- !u!54 &982446535
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2673,7 +2675,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1205891881}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 13.4273529, z: -29.2189941}
+  m_LocalPosition: {x: -1, y: 0, z: -29.2189941}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 711688054}
@@ -3710,6 +3712,8 @@ MonoBehaviour:
   rightXBounds: 2.88020692e-05
   leftXBounds: 1007.341
   avoidSpeed: 12.46
+  currentCarPassing: {fileID: 0}
+  beingOverTaken: 0
 --- !u!95 &1900391961
 Animator:
   serializedVersion: 2
