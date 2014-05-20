@@ -22,6 +22,8 @@ var sidewaySensorLength : float = 5;
 var rightXBounds : float = 992.5453;
 var leftXBounds : float = 1007.341;
 var avoidSpeed : float = 10;
+var currentCarPassing : Transform;
+var beingOverTaken : boolean = false;
 private var flag : int = 0;
 private var startPos : Vector3;
 
@@ -61,6 +63,7 @@ function GetSteer(){
 	wheelFR.steerAngle = newSteer;
 	
 	// Determine when and where to go
+	Debug.Log(Mathf.Abs(transform.position.z-path[currentPathObject].transform.position.z));
 	if(Mathf.Abs(transform.position.z-path[currentPathObject].transform.position.z) <= distFromPath){
 		currentPathObject++;
 		if(currentPathObject == path.length-1){
@@ -115,63 +118,65 @@ function Sensors(){
 	}
 
 		
-	
-	// Front straight right sensor
-	pos += transform.right*frontSensorSideDistance;
-	if( transform.position.x < leftXBounds ){
-		if(Physics.Raycast(pos, transform.forward, hit, sensorLength)){
-			if(hit.transform.tag != "Terrain"){
+	if(currentCarPassing != null){
+		// Front straight right sensor
+		pos += transform.right*frontSensorSideDistance;
+		if( pathGroup.name != "OuterLeftLane"){
+			if(Physics.Raycast(pos, transform.forward, hit, sensorLength)){
+				if(hit.transform.tag != "Terrain"){
+					flag++;
+					avoidSensitivity -= 0.25;
+					Debug.Log("Turning left");
+					Debug.DrawLine(pos, hit.point, Color.white);
+				}
+				
+			} else if(Physics.Raycast(pos, rightAngle, hit, sensorLength)){
 				flag++;
-				avoidSensitivity -= 1;
-				Debug.Log("Turning left");
+				avoidSensitivity -= 0.125;
 				Debug.DrawLine(pos, hit.point, Color.white);
 			}
-			
-		} else if(Physics.Raycast(pos, rightAngle, hit, sensorLength)){
-			flag++;
-			avoidSensitivity -= 0.5;
-			Debug.DrawLine(pos, hit.point, Color.white);
 		}
-	}
-	
-	
+		
+		
 
-	// Front straight left sensor
-	pos = transform.position;
-	pos += transform.forward*frontSensorStartPoint;
-	pos -= transform.right*frontSensorSideDistance;
-	if( transform.position.x > rightXBounds ){
-		if(Physics.Raycast(pos, transform.forward, hit, sensorLength)){
+		// Front straight left sensor
+		pos = transform.position;
+		pos += transform.forward*frontSensorStartPoint;
+		pos -= transform.right*frontSensorSideDistance;
+		if(pathGroup.name != "OuterRightLane"){
+			if(Physics.Raycast(pos, transform.forward, hit, sensorLength))
+			{
+				if(hit.transform.tag != "Terrain"){
+					flag++;
+					avoidSensitivity += 0.25;
+					Debug.Log("Turning right");
+					Debug.DrawLine(pos, hit.point, Color.white);
+				} // Front angled sensor
+			} else if(Physics.Raycast(pos, leftAngle, hit, sensorLength))
+			{
+				flag++;
+				avoidSensitivity += 0.125;
+				Debug.DrawLine(pos, hit.point, Color.white);
+			}
+		}
+
+		// Rear sensors
+		pos = transform.position;
+		pos += -transform.forward*frontSensorStartPoint;
+		pos += transform.right*frontSensorSideDistance;
+		if(Physics.Raycast(pos, transform.right, hit, sensorLength)){
 			if(hit.transform.tag != "Terrain"){
 				flag++;
-				avoidSensitivity += 1;
-				Debug.Log("Turning right");
-				Debug.DrawLine(pos, hit.point, Color.white);
+				avoidSensitivity += 0;
+				Debug.Log("Going straight");
+				Debug.DrawLine(pos, hit.point, Color.red);
 			} // Front angled sensor
-		} else if(Physics.Raycast(pos, leftAngle, hit, sensorLength)){
-			flag++;
-			avoidSensitivity += 0.5;
-			Debug.DrawLine(pos, hit.point, Color.white);
-		}
-	}
-
-	// Rear sensors
-	pos = transform.position;
-	pos += -transform.forward*frontSensorStartPoint;
-	pos += transform.right*frontSensorSideDistance;
-	if(Physics.Raycast(pos, transform.right, hit, sensorLength)){
-		if(hit.transform.tag != "Terrain"){
+		} else if(Physics.Raycast(pos, rearRightAngle, hit, sensorLength)){
 			flag++;
 			avoidSensitivity += 0;
-			Debug.Log("Going straight");
 			Debug.DrawLine(pos, hit.point, Color.red);
-		} // Front angled sensor
-	} else if(Physics.Raycast(pos, rearRightAngle, hit, sensorLength)){
-		flag++;
-		avoidSensitivity += 0;
-		Debug.DrawLine(pos, hit.point, Color.red);
+		}
 	}
-	
 	// Right sideway sensor
 	/*
 	if(Physics.Raycast(transform.position, transform.right, hit, sidewaySensorLength)){
@@ -195,21 +200,38 @@ function Sensors(){
 	
 	
 	// Front mid sensor
-	if (avoidSensitivity == 0){
+	if (avoidSensitivity == 0 && !beingOverTaken){
 		if(Physics.Raycast(pos, transform.forward, hit, sensorLength)){
 			if(hit.transform.tag != "Terrain"){
-				if(hit.normal.x <0)
-					avoidSensitivity = -1;
-				else
-					avoidSensitivity = 1;
+				currentCarPassing = hit.transform;
+				currentCarPassing.root.GetComponent(AICarScript).beingOverTaken = true;
+				if(pathGroup.transform.name == "OuterRightLane"){
+					avoidSensitivity = -0.25;
+				} else if (pathGroup.transform.name == "OuterLeftLane"){
+					avoidSensitivity = 0.25;
+				} else {
+					if(hit.normal.x <0)
+						avoidSensitivity = -0.25;
+					else
+						avoidSensitivity = 0.25;
+				}
 				Debug.DrawLine(pos, hit.point, Color.white);
 			}
+		} else {
+			currentCarPassing == null;
 		}
 	}
 	
+//	if(currentCarPassing != null){
+//		Debug.Log(currentCarPassing.position.z + ", " + transform.position.z);
+//		if(currentCarPassing.position.z < transform.position.z){
+//			flag = 0;
+//		}
+//	}
 	if(flag != 0){
 		AvoidSteer(avoidSensitivity);
 	}
+	
 }
 
 function AvoidSteer(sensitivity : float){
