@@ -142,14 +142,19 @@ function Sensors(){
 	pos += transform.forward*frontSensorStartPoint;
 	var halfRightPos : Vector3 = pos + transform.right*frontSensorSideDistance*2/3;
 	var halfLeftPos : Vector3 = pos - transform.right*frontSensorSideDistance*2/3;
+	
 	// Fire away the braking sensors
 	if(Physics.Raycast(pos, transform.forward, hit, brakeSensorLength)){
+		// Middle sensor
 		Brake(hit, pos);	
 	}  else if(Physics.Raycast(halfRightPos, transform.forward, hit, brakeSensorLength)){
+	    // Right sensor
 		Brake(hit, pos);
 	} else if(Physics.Raycast(halfLeftPos, transform.forward, hit, brakeSensorLength)){
+		// Left sensor
 		Brake(hit, pos);
 	} else {
+		// Reset the braking if no obstacle is hit
 		wheelRL.brakeTorque = 0;
 		wheelRR.brakeTorque = 0;
 	}
