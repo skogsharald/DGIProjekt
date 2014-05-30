@@ -2,7 +2,7 @@
 /* 
 	Script based on the AICarScript written by ? at FlatTutorials
 	(www.flattutorials.com)
-	Extended to fit the needs for this project	
+	Extended to fit the needs for this project by Ludvig Jansson, 911223-2872
 */
 
 var centerOfMass : Vector3; // Adjust the center of mass of the car to counter its tendency to tip
