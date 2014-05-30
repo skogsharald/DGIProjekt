@@ -1,6 +1,6 @@
 ﻿/* 
 	Script written to guide car along a given path.
-	Written by ? at FlatTutorials
+	Written by FlatTutorials
 	(www.flattutorials.com)
 */
 

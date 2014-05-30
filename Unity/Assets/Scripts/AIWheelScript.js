@@ -2,7 +2,7 @@
 
 /*
 	Script written to turn and spin the wheels of the car.
-	Written by ? at FlatTutorials. 
+	Written by FlatTutorials. 
 	(www.flattutorials.com)
 */
 
