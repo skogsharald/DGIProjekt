@@ -1,7 +1,7 @@
 ﻿#pragma strict
 
 /*
-	Script written to turn and rotate the wheels of the car.
+	Script written to turn and spin the wheels of the car.
 	Written by ? at FlatTutorials. 
 	(www.flattutorials.com)
 */
@@ -14,9 +14,9 @@ function Start () {
 }
 
 function Update () {
-	// Turn the wheels
+	// Spin the wheels
 	transform.Rotate(myWheelCollider.rpm/60*360*Time.deltaTime,0,0);
-	// Rotate the front wheels to give a sense of interaction from "driver"
+	// Turn the front wheels to give a sense of interaction from "driver"
 	transform.localEulerAngles.y = (myWheelCollider.steerAngle - transform.localEulerAngles.z - 180) * maxSteer;
 	
 	// Add suspension to the car

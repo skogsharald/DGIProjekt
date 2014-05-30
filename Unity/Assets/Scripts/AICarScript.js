@@ -120,7 +120,8 @@ function Move(){
 }
 
 /*
-	This handles the real car AI
+	This handles the real car AI. The foundation of this code was provided by the Car AI tutorial, 
+	but most of the code was written by Ludvig Jansson.
 */
 function Sensors(){
 	flag = 0; // Reset the flag
@@ -163,7 +164,8 @@ function Sensors(){
 	if(overTaking){
 		pos += transform.right*frontSensorSideDistance;
 		// Front straight right sensor
-		if( pathGroup.name != "OuterLeftLane"){
+		if( pathGroup.name != "OuterLeftLane"){ 
+		// This sensor makes the car turn left, which it shouldn't if it's in the leftmost lane
 			if(Physics.Raycast(pos, transform.forward, hit, sensorLength)){
 				if(carLeftBounds.x < leftXBounds){
 					// Make sure the script picks up that the car is avoiding another car
@@ -341,10 +343,7 @@ function Brake(hit : RaycastHit, pos : Vector3){
 			wheelRR.brakeTorque = decellerationSpeed;
 			currentCarPassing.root.GetComponent(AICarScript).beingOverTaken = true;
 			overTaking = true;
-	} else {
-			currentCarPassing.root.GetComponent(AICarScript).beingOverTaken = false;
-			overTaking = false;
-		}
+		}	 
 	}
 }
 
