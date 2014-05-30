@@ -1,4 +1,10 @@
-﻿var path : Array;
+﻿/* 
+	Script written to guide car along a given path.
+	Written by ? at FlatTutorials
+	(www.flattutorials.com)
+*/
+
+var path : Array;
 var rayColor: Color =  Color.white;
 
 function OnDrawGizmos(){
